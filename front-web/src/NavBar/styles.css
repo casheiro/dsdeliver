@@ -1,7 +1,7 @@
 .main-navbar {
     padding-left: 45px;
     height: 70px;
-    background: #DA5C5C;
+    background: var(--primary-color);
     display: flex;
     align-items: center;
 
