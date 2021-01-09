@@ -1,10 +1,10 @@
 import './App.css';
-import Hello from './Hello';
+import NavBar from './NavBar';
 
 function App() {
   return (
-    <div className="App">
-      <Hello message="XantXant"/>
+    <div>
+      <NavBar />
     </div>
   );
 }
