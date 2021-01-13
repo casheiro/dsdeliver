@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import Routes from './src/Routes';
 
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     OpenSans_400Regular,

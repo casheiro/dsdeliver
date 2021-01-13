@@ -1,29 +1,48 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, Platform } from 'react-native';
+import { Order } from '../types';
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
-export default function OrderCard() {
+if(Platform.OS === 'android') { // only android needs polyfill
+  require('intl'); // import intl object
+  require('intl/locale-data/jsonp/en-IN'); // load the required locale details
+}
+dayjs.locale('pt-br');
+dayjs.extend(relativeTime);
 
-  const navigation = useNavigation();
+type Props = {
+  order: Order;
+}
 
-  const handleOnPress = () => {
-    navigation.navigate('OrderDetails');
-  }
+function dateFromNow(date: string) {
+  return dayjs(date).fromNow();
+}
+
+function formatPrice(price: number) {
+  const formatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  })
+  return formatter.format(price)
+}
+
+export default function OrderCard({ order }: Props) {
 
   return (
-    <TouchableWithoutFeedback onPress={handleOnPress}> 
-      <View style={styles.container}>
-        <View style={styles.header }>
-          <Text style={styles.orderName}>Pedido 1</Text>
-          <Text style={styles.orderPrice}>R$ 35,92</Text>
-        </View>
-        <Text style={styles.text}>Há 30 min.</Text>
-        <View style={styles.productsList}>
-          <Text style={styles.text}>Receba todos os pedidos do seu{'\n'}restaurante na palma da sua mão</Text>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.orderName}>Pedido {order.id}</Text>
+        <Text style={styles.orderPrice}>{formatPrice(order.total)}</Text>
       </View>
-    </TouchableWithoutFeedback>
+      <Text style={styles.text}>{dateFromNow(order.moment)}</Text>
+      <View style={styles.productsList}>
+        {order.products.map(product => (
+          <Text key={product.id} style={styles.text}>{product.name}</Text>
+        ))}
+      </View>
+    </View>
   );
 }
 
